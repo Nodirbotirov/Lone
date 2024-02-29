@@ -13,8 +13,8 @@ import java.time.Period;
 //@RequiredArgsConstructor
 @Data
 @Entity
-@Table(name ="students")
-public class Student {
+@Table(name ="users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
