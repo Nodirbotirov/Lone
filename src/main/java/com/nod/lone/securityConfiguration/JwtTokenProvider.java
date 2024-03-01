@@ -1,6 +1,7 @@
 package com.nod.lone.securityConfiguration;
 
 import com.nod.lone.model.User;
+import com.nod.lone.payload.TokenPayload;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,7 @@ public class JwtTokenProvider {
                 .setIssuedAt(date)
                 .claim("roles", user.getRole())
                 .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.ES256, secretKey)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact());
     }
 

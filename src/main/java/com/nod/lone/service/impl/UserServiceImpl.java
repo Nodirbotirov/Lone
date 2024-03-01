@@ -1,12 +1,15 @@
 package com.nod.lone.service.impl;
 
+import com.nod.lone.model.RoleName;
 import com.nod.lone.model.User;
+import com.nod.lone.payload.LoginRequest;
+import com.nod.lone.payload.SignupRequest;
+import com.nod.lone.payload.TokenPayload;
 import com.nod.lone.repository.UserRepository;
 import com.nod.lone.securityConfiguration.JwtTokenProvider;
-import com.nod.lone.securityConfiguration.LoginRequest;
-import com.nod.lone.securityConfiguration.TokenPayload;
 import com.nod.lone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +25,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-//@AllArgsConstructor
-//@Primary
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -34,10 +36,13 @@ public class UserServiceImpl implements UserService {
     @Autowired
      JwtTokenProvider jwtTokenProvider;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
 
     @Override
     public List<User> findAllUsers() {
-        return repository.findAll();
+        return repository.findAllByRoleNotIn(List.of(RoleName.SUPER_ADMIN));
     }
 
     @Override
@@ -76,6 +81,30 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
             return ResponseEntity.ok(500);
         }
+    }
+
+    @Override
+    public ResponseEntity<?> signUp(SignupRequest signupRequest) {
+        if (repository.existsUserByUsername(signupRequest.getUsername())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Choose different name");
+        }
+        if (repository.existsUsersByEmail(signupRequest.getEmail())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("choose different email");
+        }
+
+        User user = new User();
+        user.setUsername(signupRequest.getUsername());
+        user.setPassword(signupRequest.getPassword());
+        user.setEmail(signupRequest.getEmail());
+        user.setFirstName(signupRequest.getFirstName());
+        user.setLastName(signupRequest.getLastName());
+        user.setAge(signupRequest.getAge());
+        user.setRole(signupRequest.getRole());
+        user.setDateOfBirth(signupRequest.getDateOfBirth());
+
+
+        repository.save(user);
+        return ResponseEntity.ok("Success baby");
     }
 
     public User loadByUserId(Long id) {

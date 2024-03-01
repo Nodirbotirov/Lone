@@ -8,13 +8,13 @@ import com.nod.lone.service.UserService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1/auth/users")
 @AllArgsConstructor
 public class UserController {
 
     private final UserService service;
 
-    @GetMapping
+    @GetMapping("/all")
     public List<User> findAllUsers() {
 
         //todo

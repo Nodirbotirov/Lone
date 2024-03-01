@@ -24,7 +24,7 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         try {
-            Optional<User> byUsername = userRepository.findByUsername("adminbek");
+            Optional<User> byUsername = userRepository.findByUsername("admin123");
             if (byUsername.isEmpty()) {
                 userRepository.save(new User(
                         "admin123",
@@ -37,3 +37,4 @@ public class DataLoader implements CommandLineRunner {
         }
     }
 }
+//        user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));

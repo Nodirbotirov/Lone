@@ -2,9 +2,11 @@ package com.nod.lone.controller;
 
 import com.nod.lone.model.CurrentUser;
 import com.nod.lone.model.User;
-import com.nod.lone.securityConfiguration.LoginRequest;
+import com.nod.lone.payload.LoginRequest;
+import com.nod.lone.payload.SignupRequest;
+import com.nod.lone.repository.UserRepository;
 import com.nod.lone.service.UserService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,14 +15,22 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-@RequiredArgsConstructor
 public class AuthController {
 
-    private final UserService userService;
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    UserRepository userRepository;
+
 
     @PostMapping("/login")
     public HttpEntity<?> login(@RequestBody LoginRequest loginRequest) {
         return userService.signIn(loginRequest);
+    }
+    @PostMapping("/signup")
+    public HttpEntity<?> signup(@RequestBody SignupRequest signupRequest){
+        return userService.signUp(signupRequest);
     }
 
     @GetMapping("/me")
