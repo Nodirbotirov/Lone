@@ -1,19 +1,23 @@
 package com.nod.lone.controller;
 
+import com.nod.lone.dto.UserDto;
 import com.nod.lone.model.User;
-import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.*;
 import com.nod.lone.service.UserService;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/auth/users")
+@RequestMapping("/v1/users")
 @AllArgsConstructor
 public class UserController {
 
     private final UserService service;
 
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     @GetMapping("/all")
     public List<User> findAllUsers() {
 
@@ -21,10 +25,10 @@ public class UserController {
         return service.findAllUsers();
     }
 
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     @PostMapping("save_user")
-    public String saveUser(@RequestBody User user) {
-        service.saveUser(user);
-        return "User successfully saved";
+    public HttpEntity<?> saveUser(@RequestBody UserDto userDto) {
+        return service.identification(userDto);
     }
 
     @GetMapping("/{email}")
@@ -43,7 +47,6 @@ public class UserController {
     public void deleteUser(@PathVariable String email) {
         service.deleteUser(email);
     }
-
 
 
 }

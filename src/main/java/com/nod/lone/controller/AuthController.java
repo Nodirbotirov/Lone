@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/auth")
+@CrossOrigin
 public class AuthController {
 
     @Autowired
@@ -24,7 +25,7 @@ public class AuthController {
     UserRepository userRepository;
 
 
-    @PostMapping("/login")
+    @PostMapping("/signin")
     public HttpEntity<?> login(@RequestBody LoginRequest loginRequest) {
         return userService.signIn(loginRequest);
     }

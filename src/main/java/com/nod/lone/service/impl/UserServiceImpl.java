@@ -1,5 +1,6 @@
 package com.nod.lone.service.impl;
 
+import com.nod.lone.dto.UserDto;
 import com.nod.lone.model.RoleName;
 import com.nod.lone.model.User;
 import com.nod.lone.payload.LoginRequest;
@@ -31,10 +32,10 @@ public class UserServiceImpl implements UserService {
     UserRepository repository;
 
     @Autowired
-     AuthenticationManager authenticationManager;
+    AuthenticationManager authenticationManager;
 
     @Autowired
-     JwtTokenProvider jwtTokenProvider;
+    JwtTokenProvider jwtTokenProvider;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -46,8 +47,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(User user) {
-        return repository.save(user);
+    public ResponseEntity<?> identification(UserDto userDto) {
+
+        User user = new User();
+        user.setEmail(userDto.getEmail());
+        user.setUsername(userDto.getUsername());
+        user.setPassword(userDto.getPassword());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setDateOfBirth(userDto.getDateOfBirth());
+        user.setRole(userDto.getRole());
+        repository.save(user);
+        return ResponseEntity.ok("successfully Baby)");
     }
 
     @Override
@@ -79,7 +90,7 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity.ok(jwt);
         }catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.ok(500);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("you don't signIn");
         }
     }
 
@@ -94,17 +105,17 @@ public class UserServiceImpl implements UserService {
 
         User user = new User();
         user.setUsername(signupRequest.getUsername());
-        user.setPassword(signupRequest.getPassword());
+        user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         user.setEmail(signupRequest.getEmail());
-        user.setFirstName(signupRequest.getFirstName());
-        user.setLastName(signupRequest.getLastName());
-        user.setAge(signupRequest.getAge());
-        user.setRole(signupRequest.getRole());
-        user.setDateOfBirth(signupRequest.getDateOfBirth());
+//        user.setFirstName(signupRequest.getFirstName());
+//        user.setLastName(signupRequest.getLastName());
+//        user.setAge(signupRequest.getAge());
+//        user.setRole(signupRequest.getRole());
+//        user.setDateOfBirth(signupRequest.getDateOfBirth());
 
 
         repository.save(user);
-        return ResponseEntity.ok("Success baby");
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("successfully baby");
     }
 
     public User loadByUserId(Long id) {

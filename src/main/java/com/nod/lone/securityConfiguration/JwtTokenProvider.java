@@ -28,9 +28,10 @@ public class JwtTokenProvider {
                 .setIssuedAt(date)
                 .claim("roles", user.getRole())
                 .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact());
     }
+
 
     public boolean validateToken(String token) {
         try {
@@ -52,7 +53,6 @@ public class JwtTokenProvider {
         }
         return false;
     }
-
     public String getUserIdFromToken(String token) {
         return Jwts
                 .parser()

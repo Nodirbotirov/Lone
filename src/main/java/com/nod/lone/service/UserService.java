@@ -1,5 +1,6 @@
 package com.nod.lone.service;
 
+import com.nod.lone.dto.UserDto;
 import com.nod.lone.model.User;
 import com.nod.lone.payload.LoginRequest;
 import com.nod.lone.payload.SignupRequest;
@@ -14,7 +15,7 @@ public interface UserService extends UserDetailsService {
 
     List<User> findAllUsers();
 
-    User saveUser(User user);
+    HttpEntity<?> identification(UserDto user);
 
     User findByEmail(String email);
 

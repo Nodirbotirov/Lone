@@ -1,11 +1,9 @@
 package com.nod.lone.securityConfiguration;
 
-import com.nod.lone.model.RoleName;
 import com.nod.lone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -26,16 +24,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    UserService authService;
+    UserService userService;
+
+    @Bean
+    public JwtFilter jwtFilter() {
+        return new JwtFilter();
+    }
 
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
-    }
-
-    public JwtFilter jwtFilter() {
-        return new JwtFilter();
     }
 
 
@@ -46,8 +45,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(authService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
     }
+
 
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -56,43 +56,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .logout()
                 .logoutSuccessUrl("/")
                 .and()
                 .authorizeRequests()
                 .antMatchers(
-                        "/api/v1/auth/login"
+                        "/api/auth/signin",
+                        "/api/auth/signup"
                 )
-                .permitAll()
-                .antMatchers(HttpMethod.GET, "/api/v1/auth/users")
-                .permitAll()
-                .antMatchers("/api/v1/**").hasAnyAuthority(RoleName.SUPER_ADMIN.name())
-                .anyRequest()
-                .authenticated()
-        ;
+                .permitAll();
+//                .antMatchers(HttpMethod.GET, "/api/carousel")
+//                .permitAll()
+//                .antMatchers("/api/v1/**").hasRole(RoleName.SUPER_ADMIN.name());
         http.addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
-
-
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
