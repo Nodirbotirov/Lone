@@ -4,6 +4,7 @@ import com.nod.lone.model.RoleName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Column;
 import java.time.LocalDate;
@@ -22,5 +23,6 @@ public class UserDto {
     private String username;
     private String password;
     private RoleName role;
+    private MultipartFile photo;
 
 }

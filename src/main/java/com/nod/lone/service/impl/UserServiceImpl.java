@@ -6,9 +6,11 @@ import com.nod.lone.model.User;
 import com.nod.lone.payload.LoginRequest;
 import com.nod.lone.payload.SignupRequest;
 import com.nod.lone.payload.TokenPayload;
+import com.nod.lone.repository.FileStorageRepository;
 import com.nod.lone.repository.UserRepository;
 import com.nod.lone.securityConfiguration.JwtTokenProvider;
 import com.nod.lone.service.UserService;
+import com.nod.lone.service.file.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +42,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    FileStorageService fileStorageService;
+
+    @Autowired
+    FileStorageRepository fileStorageRepository;
+
 
     @Override
     public List<User> findAllUsers() {
@@ -57,7 +65,18 @@ public class UserServiceImpl implements UserService {
         user.setLastName(userDto.getLastName());
         user.setDateOfBirth(userDto.getDateOfBirth());
         user.setRole(userDto.getRole());
+        Long oldFileId = null;
+        if (userDto.getPhoto() != null) {
+            if (user.getPhoto() != null) {
+                oldFileId = user.getPhoto().getId();
+            }
+            user.setPhoto(fileStorageService.save(userDto.getPhoto()));
+        }
         repository.save(user);
+        if (oldFileId != null){
+            fileStorageService.deleteFile(oldFileId);
+            fileStorageRepository.deleteById(oldFileId);
+        }
         return ResponseEntity.ok("successfully Baby)");
     }
 

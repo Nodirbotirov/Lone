@@ -5,6 +5,7 @@ import com.nod.lone.model.User;
 import com.nod.lone.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ public class UserController {
 
     private final UserService service;
 
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN','ADMIN')")
     @GetMapping("/all")
     public List<User> findAllUsers() {
 
@@ -25,9 +26,9 @@ public class UserController {
         return service.findAllUsers();
     }
 
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
-    @PostMapping("save_user")
-    public HttpEntity<?> saveUser(@RequestBody UserDto userDto) {
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN','ADMIN')")
+    @PostMapping(value = "save_user", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public HttpEntity<?> saveUser(@ModelAttribute UserDto userDto) {
         return service.identification(userDto);
     }
 

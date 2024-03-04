@@ -40,6 +40,8 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private RoleName role;
+    @OneToOne
+    private FileStorage photo;
 
     public int getAge() {
         return Period.between(dateOfBirth, LocalDate.now()).getYears() + 1;
