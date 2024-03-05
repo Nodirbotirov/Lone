@@ -8,20 +8,20 @@ import org.springframework.http.HttpEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import java.util.List;
+import java.text.ParseException;
 
 
 public interface UserService extends UserDetailsService {
 
-    List<User> findAllUsers();
+    HttpEntity<?> findAllUsers();
 
-    HttpEntity<?> identification(UserDto user);
+    HttpEntity<?> identification(UserDto user) throws ParseException;
 
-    User findByEmail(String email);
+    HttpEntity<?> findByEmail(String email);
 
-    User updateUser(User user);
+    HttpEntity<?> updateUser(UserDto userDto);
 
-    void deleteUser(String email);
+    HttpEntity<?> deleteUser(Long id);
 
     HttpEntity<?> signIn(LoginRequest loginRequest);
 
@@ -30,4 +30,6 @@ public interface UserService extends UserDetailsService {
     UserDetails loadUserByUsername(String username);
 
     HttpEntity<?> signUp(SignupRequest signupRequest);
+
+    HttpEntity<?> findById(Long id);
 }

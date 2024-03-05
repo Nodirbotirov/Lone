@@ -31,6 +31,7 @@ public class User implements UserDetails {
     private Long id;
     private String firstName;
     private String lastName;
+//    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
     @Column(unique = true)
     private String email;
@@ -44,7 +45,7 @@ public class User implements UserDetails {
     private FileStorage photo;
 
     public int getAge() {
-        return Period.between(dateOfBirth, LocalDate.now()).getYears() + 1;
+        return Period.between(dateOfBirth, LocalDate.now()).getYears();
     }
 
     public User(@NonNull String username, @NonNull String password, RoleName role){
