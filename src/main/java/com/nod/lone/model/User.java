@@ -1,8 +1,7 @@
 package com.nod.lone.model;
 
-//import jakarta.persistence.*;
-//import jakarta.persistence.*;
 
+import com.nod.lone.model.enums.RoleName;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -14,12 +13,6 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Collection;
 import java.util.List;
-
-//@Getter
-//@Setter
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@RequiredArgsConstructor
 
 @Data
 @Entity(name ="users")
@@ -39,6 +32,8 @@ public class User implements UserDetails {
     private int age;
     private String username;
     private String password;
+    @Column(unique = true)
+    private String phoneNumber;
     @Enumerated(EnumType.STRING)
     private RoleName role;
     @OneToOne

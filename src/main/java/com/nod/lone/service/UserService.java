@@ -2,8 +2,8 @@ package com.nod.lone.service;
 
 import com.nod.lone.dto.UserDto;
 import com.nod.lone.model.User;
-import com.nod.lone.payload.LoginRequest;
-import com.nod.lone.payload.SignupRequest;
+import com.nod.lone.dto.LoginRequest;
+import com.nod.lone.dto.SignupRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,4 +32,6 @@ public interface UserService extends UserDetailsService {
     HttpEntity<?> signUp(SignupRequest signupRequest);
 
     HttpEntity<?> findById(Long id);
+
+    HttpEntity<?> userInfo(Long id);
 }

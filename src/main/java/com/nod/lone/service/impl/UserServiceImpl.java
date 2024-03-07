@@ -1,13 +1,14 @@
 package com.nod.lone.service.impl;
 
+import com.nod.lone.dto.LoginRequest;
+import com.nod.lone.dto.SignupRequest;
 import com.nod.lone.dto.UserDto;
-import com.nod.lone.model.FileStorage;
-import com.nod.lone.model.RoleName;
+import com.nod.lone.model.BankCard;
 import com.nod.lone.model.User;
+import com.nod.lone.model.enums.RoleName;
 import com.nod.lone.payload.AllApiResponse;
-import com.nod.lone.payload.LoginRequest;
-import com.nod.lone.payload.SignupRequest;
 import com.nod.lone.payload.TokenPayload;
+import com.nod.lone.repository.BankCardRepository;
 import com.nod.lone.repository.FileStorageRepository;
 import com.nod.lone.repository.UserRepository;
 import com.nod.lone.securityConfiguration.JwtTokenProvider;
@@ -52,6 +53,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     FileStorageRepository fileStorageRepository;
 
+    @Autowired
+    BankCardRepository bankCardRepository;
+
 
     @Override
     public HttpEntity<?> findAllUsers() {
@@ -74,7 +78,7 @@ public class UserServiceImpl implements UserService {
             User user = new User();
             user.setEmail(userDto.getEmail());
             user.setUsername(userDto.getUsername());
-            user.setPassword(userDto.getPassword());
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
             user.setFirstName(userDto.getFirstName());
             user.setLastName(userDto.getLastName());
             user.setRole(RoleName.USER);
@@ -92,7 +96,7 @@ public class UserServiceImpl implements UserService {
                 fileStorageService.deleteFile(oldFileId);
                 fileStorageRepository.deleteById(oldFileId);
             }
-            return AllApiResponse.response(1, "Successfully Baby!");
+            return AllApiResponse.response(1, "Successfully Baby!", user);
         }catch (Exception e){
             return AllApiResponse.response(500,0,e.getMessage());
         }
@@ -137,13 +141,13 @@ public class UserServiceImpl implements UserService {
                 if (userDto.getUsername() != null)user.setUsername(userDto.getUsername());
                 if (userDto.getPassword() != null)user.setPassword(userDto.getPassword());
                 if (userDto.getRole() != null)user.setRole(userDto.getRole());
-                if (userDto.getPhoto() != null) {
-                    FileStorage oldPhoto = user.getPhoto();
-                    user.setPhoto(fileStorageService.save(userDto.getPhoto()));
-                    if (oldPhoto != null ) {
-                        fileStorageService.deleteFile(oldPhoto.getId());
+            if (userDto.getPhoto() != null) {
+                Long oldPhoto = user.getPhoto().getId();
+                if (oldPhoto != null ) {
+                        fileStorageService.deleteFile(oldPhoto);
                     }
-                }
+                user.setPhoto(fileStorageService.save(userDto.getPhoto()));
+            }
                     userRepository.save(user);
             return AllApiResponse.response(200,1,"updated");
         }catch (Exception e){
@@ -229,6 +233,38 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
             throw new UsernameNotFoundException("Error enter with login and password!");
         }
+    }
+
+    @Override
+    public HttpEntity<?> userInfo(Long id) {
+        try {
+            if (id == null) return AllApiResponse.response(400,"id is null");
+            Optional<User> userOptional = userRepository.findById(id);
+            if (userOptional.isEmpty()) return AllApiResponse.response(400,"not fount user");
+            return AllApiResponse.response(200,"ok",toUserDto(userOptional.get()));
+        }catch (Exception e){
+            e.printStackTrace();
+            return AllApiResponse.response(409,"conflict");
+        }
+    }
+
+
+    public UserDto toUserDto(User user) throws Exception {
+        try {
+            List<BankCard> userCards = bankCardRepository.findAllByUserOrderByCreatedDate(user);
+            return new UserDto(
+                    user.getId(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    String.valueOf(user.getDateOfBirth()),
+                    user.getEmail(),
+                    userCards
+                    );
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new Exception("Error is toUserDto method");
+        }
+
     }
 
 

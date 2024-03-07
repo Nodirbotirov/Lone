@@ -1,7 +1,7 @@
 package com.nod.lone.component;
 
 
-import com.nod.lone.model.RoleName;
+import com.nod.lone.model.enums.RoleName;
 import com.nod.lone.model.User;
 import com.nod.lone.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

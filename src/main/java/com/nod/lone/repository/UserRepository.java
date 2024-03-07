@@ -1,6 +1,6 @@
 package com.nod.lone.repository;
 
-import com.nod.lone.model.RoleName;
+import com.nod.lone.model.enums.RoleName;
 import com.nod.lone.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

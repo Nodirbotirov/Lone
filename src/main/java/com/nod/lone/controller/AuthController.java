@@ -2,8 +2,8 @@ package com.nod.lone.controller;
 
 import com.nod.lone.model.CurrentUser;
 import com.nod.lone.model.User;
-import com.nod.lone.payload.LoginRequest;
-import com.nod.lone.payload.SignupRequest;
+import com.nod.lone.dto.LoginRequest;
+import com.nod.lone.dto.SignupRequest;
 import com.nod.lone.repository.UserRepository;
 import com.nod.lone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

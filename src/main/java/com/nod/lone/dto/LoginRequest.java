@@ -1,4 +1,4 @@
-package com.nod.lone.payload;
+package com.nod.lone.dto;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.nod.lone.model;
+package com.nod.lone.model.enums;
 
 public enum RoleName {
 

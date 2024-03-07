@@ -55,8 +55,9 @@ public class UserController {
         return service.deleteUser(id);
     }
 
-
-
-
+    @GetMapping("/user-info/{id}")
+    public HttpEntity<?> userInfo(@PathVariable Long id){
+        return service.userInfo(id);
+    }
 
 }

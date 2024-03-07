@@ -2,7 +2,7 @@
 //
 //import com.nod.lone.model.User;
 //import com.nod.lone.repository.InMemoryUserDAO;
-//import com.nod.lone.payload.LoginRequest;
+//import com.nod.lone.dto.LoginRequest;
 //import com.nod.lone.service.UserService;
 //import lombok.AllArgsConstructor;
 //import org.springframework.http.HttpEntity;
