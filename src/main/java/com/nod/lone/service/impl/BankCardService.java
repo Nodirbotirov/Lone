@@ -45,7 +45,11 @@ public class BankCardService {
             bankCard.setKindOfBank(dto.getKindOfBank());
             bankCard.setOverallBalance(BigDecimal.valueOf(0.00));
             bankCard.setIsActive(true);
-            bankCard.setPinCode(dto.getPinCode());
+            if (dto.getPinCode() == null){
+                bankCard.setPinCode("9999");
+            }else {
+                bankCard.setPinCode(dto.getPinCode());
+            }
             if (dto.getUserId() == null){
                 return AllApiResponse.response(400,"Karta egasi yuq. Karta egasi biriktirilishi shart!");
             }else {
