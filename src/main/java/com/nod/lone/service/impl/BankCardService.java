@@ -73,7 +73,7 @@ public class BankCardService {
         if (balanceRequest.getCardNumber().isEmpty()||balanceRequest.getPinCode().isEmpty()){
             return AllApiResponse.response(400, "Malumotlar to'liq emas");
         }else {
-            Optional<BankCard> cardOptional = bankCardRepository.findBankCardByCardNumber(balanceRequest.getCardNumber());
+            Optional<BankCard> cardOptional = bankCardRepository.findByCardNumber(balanceRequest.getCardNumber());
             if (cardOptional.isEmpty()){
                 return AllApiResponse.response(400, "Mavjud emas");
             }else {

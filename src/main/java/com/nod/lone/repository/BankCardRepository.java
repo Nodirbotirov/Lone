@@ -13,4 +13,5 @@ public interface BankCardRepository extends JpaRepository<BankCard, Long> {
 
     Optional<BankCard> findBankCardByCardNumber(String cardNumber);
 
+    Optional<BankCard> findByCardNumber(String cardNumber);
 }

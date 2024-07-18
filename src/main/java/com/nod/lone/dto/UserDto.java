@@ -22,6 +22,7 @@ public class UserDto {
     @Column(unique = true)
     private String email;
     private String username;
+    private String phoneNumber;
     private String password;
     private RoleName role;
     private MultipartFile photo;

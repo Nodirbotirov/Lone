@@ -162,9 +162,14 @@ public class UserServiceImpl implements UserService {
         try {
             Optional<User> user = userRepository.findById(id);
             if (user.isPresent()){
-                Long fileId = user.get().getPhoto().getId();
-                fileStorageService.deleteFile(fileId);
-                userRepository.deleteById(user.get().getId());
+                if (user.get().getPhoto()==null){
+                    userRepository.deleteById(user.get().getId());
+                }else {
+                    Long fileId = user.get().getPhoto().getId();
+                    fileStorageService.deleteFile(fileId);
+                    userRepository.deleteById(user.get().getId());
+                }
+
                 return AllApiResponse.response(1,"deleted");
             }else return AllApiResponse.response(404, 0, "Not Found");
         }catch (Exception e){
@@ -177,7 +182,9 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<?> signIn(LoginRequest loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUsername(),
+                            loginRequest.getPassword())
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             User principal = (User) authentication.getPrincipal();
